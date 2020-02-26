@@ -4,11 +4,13 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const User = require('../models/user');
+const { tokenVerification, verifyadministrator_role } = require('../middlewares/authentication');
 
 const app = express();
 
-app.get('/user', function(req, res) {
-    User.find({ role: 'CLIENT_ROLE' }, 'name email role state google img')
+app.get('/user', tokenVerification, (req, res) => {
+
+    User.find({}, 'name email role state google img')
         .limit(10)
         .exec((err, users) => {
             if (err) {
@@ -18,7 +20,7 @@ app.get('/user', function(req, res) {
                 });
             }
 
-            User.count({ role: 'CLIENT_ROLE' }, (err, count) => {
+            User.count({}, (err, count) => {
 
                 res.json({
                     ok: true,
@@ -29,7 +31,7 @@ app.get('/user', function(req, res) {
         });
 });
 
-app.post('/user', function(req, res) {
+app.post('/user', [tokenVerification, verifyadministrator_role], (req, res) => {
     let body = req.body;
 
     let user = new User({
@@ -55,7 +57,7 @@ app.post('/user', function(req, res) {
     });
 });
 
-app.put('/user/:id', function(req, res) {
+app.put('/user/:id', [tokenVerification, verifyadministrator_role], (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'img', 'description']);
 
@@ -74,7 +76,7 @@ app.put('/user/:id', function(req, res) {
     });
 });
 
-app.delete('/user/:id', function(req, res) {
+app.delete('/user/:id', [tokenVerification, verifyadministrator_role], (req, res) => {
     let id = req.params.id;
 
     User.findByIdAndRemove(id, (err, userDeleted) => {
