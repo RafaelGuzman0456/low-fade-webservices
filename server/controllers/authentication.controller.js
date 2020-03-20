@@ -43,6 +43,7 @@ authCtrl.login = async(req, res) => {
             token
         });
 
+
     } catch (err) {
         res.status(500).json({
             ok: false,
@@ -125,7 +126,6 @@ module.exports.getUser = (code) => {
 authCtrl.google = async(req, res) => {
     try {
         let token = req.body.idtoken;
-
         let googleUser = await verify(token)
             .catch(e => {
                 return res.status(403).json({

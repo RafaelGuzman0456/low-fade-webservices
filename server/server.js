@@ -1,6 +1,7 @@
 require('./config/config');
 
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -23,7 +24,15 @@ app.use((req, res, next) => {
 const { mongoose } = require('./database');
 
 
-// Routes
+// Routes Angular Client
+app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/', express.static(path.join(__dirname, '../frontend')));
+app.use('/signin', express.static(path.join(__dirname, '../frontend')));
+app.use('/home', express.static(path.join(__dirname, '../frontend')));
+app.use('/signup', express.static(path.join(__dirname, '../frontend')));
+app.use('/profile', express.static(path.join(__dirname, '../frontend')));
+app.use('/config-user', express.static(path.join(__dirname, '../frontend')));
+// Routes Node Js
 app.use('/api/user', require('./routes/user.routes'));
 app.use('/api/login', require('./routes/authentication.routes'));
 app.use(require('./routes/authentication.routes'));
