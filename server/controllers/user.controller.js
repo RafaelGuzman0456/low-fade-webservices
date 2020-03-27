@@ -1,13 +1,14 @@
 const User = require('../models/user');
-
+const { unlink } = require('fs-extra');
+const path = require('path');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const userCtrl = {};
 
-userCtrl.getUser = async(req, res) => {
+userCtrl.getUsers = async(req, res) => {
     try {
-        const users = await User.find({ role: 'EMPLOYEE_ROLE' }, 'name email description img');
+        const users = await User.find({ role: 'EMPLOYEE_ROLE' }, '_id name email description path');
         res.json(users);
     } catch (err) {
         res.status(400).json({
@@ -16,6 +17,19 @@ userCtrl.getUser = async(req, res) => {
         });
     }
 }
+
+userCtrl.getUser = async(req, res) => {
+    try {
+        const user = await User.findById(req.params.id, 'name email description path');
+        res.json(user);
+    } catch (err) {
+        res.status(400).json({
+            ok: false,
+            err
+        });
+    }
+}
+
 
 userCtrl.createUser = async(req, res) => {
     try {
@@ -26,7 +40,11 @@ userCtrl.createUser = async(req, res) => {
             password: bcrypt.hashSync(body.password, 10),
             role: 'EMPLOYEE_ROLE',
             description: body.description,
-            img: body.img
+            filename: req.file.filename,
+            path: '/img/uploads/' + req.file.filename,
+            originalname: req.file.originalname,
+            mimetype: req.file.mimetype,
+            size: req.file.size
         });
 
         const userDB = await user.save({});
@@ -47,9 +65,26 @@ userCtrl.createUser = async(req, res) => {
 userCtrl.updateUser = async(req, res) => {
     try {
         let id = req.params.id;
-        let body = _.pick(req.body, ['name', 'img', 'description']);
+        let body = req.body;
 
-        const userDB = await User.findByIdAndUpdate(id, body);
+        if (req.file) {
+            console.log("Entra aqui 1");
+            var user = {
+                name: body.name,
+                description: body.description,
+                filename: req.file.filename,
+                path: '/img/uploads/' + req.file.filename,
+                originalname: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size
+            }
+        } else {
+            var user = {
+                name: body.name,
+                description: body.description
+            }
+        }
+        const userDB = await User.findOne({ _id: id });
         if (!userDB) {
             return res.status(400).json({
                 ok: false,
@@ -58,14 +93,16 @@ userCtrl.updateUser = async(req, res) => {
                 }
             });
         }
+        unlink(path.resolve('./libs/public' + userDB.path));
+        await User.updateOne({ _id: id }, { $set: user }, { new: true });
         res.json({
             ok: true,
-            user: userDB
+            status: 'Service Update'
         });
     } catch (err) {
         res.status(400).json({
             ok: false,
-            err
+            err: err
         });
     }
 }
@@ -74,7 +111,7 @@ userCtrl.deleteUser = async(req, res) => {
     try {
         let id = req.params.id;
 
-        const userDeleted = await User.deleteOne({ _id: id });
+        const userDeleted = await User.findOneAndDelete({ _id: id });
         if (!userDeleted) {
             return res.status(400).json({
                 ok: false,
@@ -83,6 +120,7 @@ userCtrl.deleteUser = async(req, res) => {
                 }
             });
         }
+        unlink(path.resolve('./libs/public' + userDeleted.path));
         res.json({
             ok: true,
             user: userDeleted

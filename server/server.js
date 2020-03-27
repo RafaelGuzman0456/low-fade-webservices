@@ -31,13 +31,23 @@ app.use('/signin', express.static(path.join(__dirname, '../frontend')));
 app.use('/home', express.static(path.join(__dirname, '../frontend')));
 app.use('/signup', express.static(path.join(__dirname, '../frontend')));
 app.use('/profile', express.static(path.join(__dirname, '../frontend')));
-app.use('/config-user', express.static(path.join(__dirname, '../frontend')));
+app.use('/users', express.static(path.join(__dirname, '../frontend')));
+app.use('/users/new', express.static(path.join(__dirname, '../frontend')));
+app.use('/user', express.static(path.join(__dirname, '../frontend')));
+app.use('/services', express.static(path.join(__dirname, '../frontend')));
+app.use('/services/new', express.static(path.join(__dirname, '../frontend')));
+app.use('/service', express.static(path.join(__dirname, '../frontend')));
+
 // Routes Node Js
 app.use('/api/user', require('./routes/user.routes'));
 app.use('/api/login', require('./routes/authentication.routes'));
 app.use(require('./routes/authentication.routes'));
 app.use(require('./routes/authentication.routes'));
 app.use('/api/register', require('./routes/register.routes'));
+// Services
+app.use('/api/service', require('./routes/service.routes'));
+
+app.use(express.static(path.join(__dirname, 'libs/public')));
 
 // Starting the server
 app.listen(process.env.PORT, () => {

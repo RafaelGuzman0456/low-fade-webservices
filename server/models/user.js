@@ -10,6 +10,7 @@ let validRoles = {
 };
 
 let userSchema = new Schema({
+    id: { type: Number, requiered: true },
     name: { type: String, required: [true, 'El nombre es necesario'] },
     email: { type: String, unique: true, required: [true, 'El correo es necesario'] },
     password: { type: String, required: [true, 'La contraseña es obligatoria'] },
@@ -18,7 +19,13 @@ let userSchema = new Schema({
     description: { type: String, required: false },
     state: { type: Boolean, default: true },
     google: { type: Boolean, default: false },
-    facebook: { type: Boolean, default: false }
+    facebook: { type: Boolean, default: false },
+    filename: { type: String, required: true },
+    path: { type: String, required: true },
+    originalname: { type: String, required: true },
+    mimetype: { type: String, required: true },
+    size: { type: Number, required: true },
+    created_at: { type: Date, default: Date.now(), required: true }
 });
 
 userSchema.methods.toJSON = function() {
