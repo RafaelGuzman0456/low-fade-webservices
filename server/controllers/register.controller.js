@@ -9,7 +9,6 @@ regCtrl.register = async(req, res) => {
         let body = req.body;
         const userDB = await User.findOne({ email: body.email });
         if (userDB) {
-            console.log("1");
             return res.status(400).json({
                 ok: false,
                 err: {

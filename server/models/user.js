@@ -20,12 +20,12 @@ let userSchema = new Schema({
     state: { type: Boolean, default: true },
     google: { type: Boolean, default: false },
     facebook: { type: Boolean, default: false },
-    filename: { type: String, required: true },
-    path: { type: String, required: true },
-    originalname: { type: String, required: true },
-    mimetype: { type: String, required: true },
-    size: { type: Number, required: true },
-    created_at: { type: Date, default: Date.now(), required: true }
+    filename: { type: String },
+    path: { type: String },
+    originalname: { type: String },
+    mimetype: { type: String },
+    size: { type: Number },
+    created_at: { type: Date, default: Date.now() }
 });
 
 userSchema.methods.toJSON = function() {

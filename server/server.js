@@ -32,11 +32,10 @@ app.use('/home', express.static(path.join(__dirname, '../frontend')));
 app.use('/signup', express.static(path.join(__dirname, '../frontend')));
 app.use('/profile', express.static(path.join(__dirname, '../frontend')));
 app.use('/users', express.static(path.join(__dirname, '../frontend')));
-app.use('/users/new', express.static(path.join(__dirname, '../frontend')));
-app.use('/user', express.static(path.join(__dirname, '../frontend')));
 app.use('/services', express.static(path.join(__dirname, '../frontend')));
-app.use('/services/new', express.static(path.join(__dirname, '../frontend')));
 app.use('/service', express.static(path.join(__dirname, '../frontend')));
+app.use('/user', express.static(path.join(__dirname, '../frontend')));
+
 
 // Routes Node Js
 app.use('/api/user', require('./routes/user.routes'));
