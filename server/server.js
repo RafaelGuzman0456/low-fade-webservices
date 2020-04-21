@@ -3,6 +3,7 @@ require('./config/config');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const stripe =require('stripe')('sk_test_gnRYNEVTe3bRdSN3mOV1yPaa00gWoK7qNG');
 
 const app = express();
 
@@ -32,10 +33,11 @@ app.use('/home', express.static(path.join(__dirname, '../frontend')));
 app.use('/signup', express.static(path.join(__dirname, '../frontend')));
 app.use('/profile', express.static(path.join(__dirname, '../frontend')));
 app.use('/users', express.static(path.join(__dirname, '../frontend')));
-app.use('/services', express.static(path.join(__dirname, '../frontend')));
-app.use('/service', express.static(path.join(__dirname, '../frontend')));
+app.use('/users/new', express.static(path.join(__dirname, '../frontend')));
 app.use('/user', express.static(path.join(__dirname, '../frontend')));
-
+app.use('/services', express.static(path.join(__dirname, '../frontend')));
+app.use('/services/new', express.static(path.join(__dirname, '../frontend')));
+app.use('/service', express.static(path.join(__dirname, '../frontend')));
 
 // Routes Node Js
 app.use('/api/user', require('./routes/user.routes'));
@@ -45,7 +47,10 @@ app.use(require('./routes/authentication.routes'));
 app.use('/api/register', require('./routes/register.routes'));
 // Services
 app.use('/api/service', require('./routes/service.routes'));
-
+ //Appoiments
+app.use('/api/appoiment', require('./routes/appoiment.routes'));
+//Clients
+app.use('/api/client', require('./routes/client.routes'));
 app.use(express.static(path.join(__dirname, 'libs/public')));
 
 // Starting the server

@@ -25,7 +25,9 @@ let userSchema = new Schema({
     originalname: { type: String },
     mimetype: { type: String },
     size: { type: Number },
-    created_at: { type: Date, default: Date.now() }
+    created_at: { type: Date, default: Date.now(), required: true },
+    birthday:{type :Date},
+    premiumClient:{type: Boolean},
 });
 
 userSchema.methods.toJSON = function() {

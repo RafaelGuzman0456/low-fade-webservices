@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const userCtrl = {};
+let userPath;
 
 userCtrl.getUsers = async(req, res) => {
     try {
@@ -13,10 +14,11 @@ userCtrl.getUsers = async(req, res) => {
     } catch (err) {
         res.status(400).json({
             ok: false,
-            err
+            err: err
         });
     }
 }
+
 
 userCtrl.getUser = async(req, res) => {
     try {
@@ -25,11 +27,10 @@ userCtrl.getUser = async(req, res) => {
     } catch (err) {
         res.status(400).json({
             ok: false,
-            err
+            err: err
         });
     }
 }
-
 
 userCtrl.createUser = async(req, res) => {
     try {
@@ -46,6 +47,7 @@ userCtrl.createUser = async(req, res) => {
             mimetype: req.file.mimetype,
             size: req.file.size
         });
+        userPath = user;
 
         const userDB = await user.save({});
         res.json({
@@ -54,12 +56,12 @@ userCtrl.createUser = async(req, res) => {
         });
 
     } catch (err) {
+        unlink(path.resolve('./libs/public' + userPath.path));
         res.status(400).json({
             ok: false,
-            err
+            err: err
         });
     }
-
 }
 
 userCtrl.updateUser = async(req, res) => {
@@ -67,23 +69,6 @@ userCtrl.updateUser = async(req, res) => {
         let id = req.params.id;
         let body = req.body;
 
-        if (req.file) {
-            console.log("Entra aqui 1");
-            var user = {
-                name: body.name,
-                description: body.description,
-                filename: req.file.filename,
-                path: '/img/uploads/' + req.file.filename,
-                originalname: req.file.originalname,
-                mimetype: req.file.mimetype,
-                size: req.file.size
-            }
-        } else {
-            var user = {
-                name: body.name,
-                description: body.description
-            }
-        }
         const userDB = await User.findOne({ _id: id });
         if (!userDB) {
             return res.status(400).json({
@@ -93,7 +78,25 @@ userCtrl.updateUser = async(req, res) => {
                 }
             });
         }
-        unlink(path.resolve('./libs/public' + userDB.path));
+
+        if (req.file) {
+            var user = {
+                name: body.name,
+                description: body.description,
+                filename: req.file.filename,
+                path: '/img/uploads/' + req.file.filename,
+                originalname: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size
+            }
+            unlink(path.resolve('./libs/public' + userDB.path));
+        } else {
+            var user = {
+                name: body.name,
+                description: body.description
+            }
+        }
+
         await User.updateOne({ _id: id }, { $set: user }, { new: true });
         res.json({
             ok: true,
@@ -128,7 +131,7 @@ userCtrl.deleteUser = async(req, res) => {
     } catch (err) {
         return res.status(400).json({
             ok: false,
-            err
+            err: err
         });
     }
 }

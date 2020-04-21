@@ -9,6 +9,7 @@ regCtrl.register = async(req, res) => {
         let body = req.body;
         const userDB = await User.findOne({ email: body.email });
         if (userDB) {
+            console.log("1");
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -20,7 +21,9 @@ regCtrl.register = async(req, res) => {
             name: body.name,
             email: body.email,
             password: bcrypt.hashSync(body.password, 10),
-            role: 'CLIENT_ROLE'
+            role: 'CLIENT_ROLE',
+            birthday: Date.now(),
+            premiumClient: false
         });
         const userSave = await user.save({});
         let token = await jwt.sign({
