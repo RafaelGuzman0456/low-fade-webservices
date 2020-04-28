@@ -3,7 +3,7 @@ require('./config/config');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const stripe =require('stripe')('sk_test_gnRYNEVTe3bRdSN3mOV1yPaa00gWoK7qNG');
+const stripe = require('stripe')('sk_test_gnRYNEVTe3bRdSN3mOV1yPaa00gWoK7qNG');
 
 const app = express();
 
@@ -47,8 +47,9 @@ app.use(require('./routes/authentication.routes'));
 app.use('/api/register', require('./routes/register.routes'));
 // Services
 app.use('/api/service', require('./routes/service.routes'));
- //Appoiments
+//Appoiments
 app.use('/api/appoiment', require('./routes/appoiment.routes'));
+app.use('/api/myappoiment', require('./routes/myAppoiment.routes'));
 //Clients
 app.use('/api/client', require('./routes/client.routes'));
 app.use(express.static(path.join(__dirname, 'libs/public')));

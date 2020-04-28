@@ -77,12 +77,14 @@ appoimentController.createAppoiment = async(req, res) => {
             });
         }
 
+
         const charge = await stripe.charges.create({
             amount: serviceAmount,
             currency: 'mxn',
             customer: customer.id,
             description: serviceObject.name,
         });
+
 
         if (charge) {
             await appoiment.save(); // se guarda la cita
