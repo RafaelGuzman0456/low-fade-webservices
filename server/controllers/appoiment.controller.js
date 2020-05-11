@@ -10,13 +10,19 @@ const userCtrl = require('../controllers/user.controller');
 const appoimentController = {};
 
 appoimentController.getAppoiments = async(req, res) => {
-    await Appoiment.find({}, function(err, appoiments) {
-        Service.populate(appoiments, { path: "" }, function(err, appoiments) {
-            res.status(200).send(appoiments);
-        });
-    });
-}
 
+    const appoinments = await Appoiment.find({}).
+    populate('serviceId employeeId');
+
+    console.log(appoinments);
+
+    /*    await Appoiment.find({}, function(err, appoiments) {
+            Service.populate(appoiments, { path: "" }, function(err, appoiments) {
+                res.status(200).send(appoiments);
+            });
+        });
+        */
+}
 
 appoimentController.createAppoiment = async(req, res) => {
     try {
@@ -25,7 +31,7 @@ appoimentController.createAppoiment = async(req, res) => {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'The client does not exist'
+                    message: 'El Cliente No Existe'
                 }
             });
         }
@@ -34,7 +40,7 @@ appoimentController.createAppoiment = async(req, res) => {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'The service does not exist'
+                    message: 'El Servicio No Existe'
                 }
             });
         }
@@ -48,7 +54,7 @@ appoimentController.createAppoiment = async(req, res) => {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'appoiment its already created'
+                    message: 'Cita Ya Creada'
                 }
             });
         }
@@ -72,7 +78,7 @@ appoimentController.createAppoiment = async(req, res) => {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'The cost of the service is expensive.'
+                    message: 'El costo del Servicio es muy elevado'
                 }
             });
         }
@@ -89,7 +95,7 @@ appoimentController.createAppoiment = async(req, res) => {
         if (charge) {
             await appoiment.save(); // se guarda la cita
             res.json({
-                'status': 'Successful appointment'
+                'status': 'Cita Agendada Correctamente'
             });
         } else {
             res.json({

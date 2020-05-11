@@ -5,5 +5,4 @@ const myAppoiment = require('../controllers/myAppoiment.controller');
 
 router.get('/:type/:id', myAppoiment.getAppoiments);
 
-
 module.exports = router;

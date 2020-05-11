@@ -26,6 +26,7 @@ const { mongoose } = require('./database');
 
 
 // Routes Angular Client
+/*
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/', express.static(path.join(__dirname, '../frontend')));
 app.use('/signin', express.static(path.join(__dirname, '../frontend')));
@@ -38,6 +39,7 @@ app.use('/user', express.static(path.join(__dirname, '../frontend')));
 app.use('/services', express.static(path.join(__dirname, '../frontend')));
 app.use('/services/new', express.static(path.join(__dirname, '../frontend')));
 app.use('/service', express.static(path.join(__dirname, '../frontend')));
+*/
 
 // Routes Node Js
 app.use('/api/user', require('./routes/user.routes'));
